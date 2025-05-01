@@ -55,7 +55,7 @@ def view_database():
         if export == 'y':
             filename = f"predictions_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
             df.to_csv(filename, index=False)
-            print(f"✅ Exported to: {filename}")
+            print(f"Exported to: {filename}")
 
     finally:
         conn.close()

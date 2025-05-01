@@ -5,12 +5,12 @@ This script automatically trains a new model using your existing dataset.
 NO manual image upload needed - uses images already on disk!
 
 Features:
-- ✅ Automatic class weight balancing
-- ✅ Data augmentation (rotation, zoom, flip)
-- ✅ GPU acceleration (if available)
-- ✅ Progress tracking
-- ✅ Automatic model saving
-- ✅ Early stopping (stops when no improvement)
+- Automatic class weight balancing
+- Data augmentation (rotation, zoom, flip)
+- GPU acceleration (if available)
+- Progress tracking
+- Automatic model saving
+- Early stopping (stops when no improvement)
 """
 
 import os
@@ -36,19 +36,20 @@ import json
 from datetime import datetime
 
 print("=" * 70)
-print("🍎🍌🍊 FRUIT RIPENESS MODEL - BALANCED TRAINING")
+print("FRUIT RIPENESS MODEL - BALANCED TRAINING")
 print("=" * 70)
 print()
 
 # ============================================================================
 # PART 1: CONFIGURATION
 # ============================================================================
-print("📋 PART 1: Configuration")
+print("PART 1: Configuration")
 print("-" * 70)
 
 # Paths (no need to change these - automatic!)
-TRAIN_DIR = "data/fruit_ripeness_dataset/fruit_ripeness_dataset/fruit_archive/dataset/dataset/test/_clean/_split/train"
-TEST_DIR = "data/fruit_ripeness_dataset/fruit_ripeness_dataset/fruit_archive/dataset/dataset/test/_clean/_split/test"
+# FULL DATASET with ALL 9 categories (including unripe fruits!)
+TRAIN_DIR = "data/fruit_ripeness_dataset/fruit_ripeness_dataset/fruit_archive/dataset/train"
+TEST_DIR = "data/fruit_ripeness_dataset/fruit_ripeness_dataset/fruit_archive/dataset/test"
 
 # Training parameters
 IMG_SIZE = 224        # Image size (224x224 pixels)
@@ -60,33 +61,33 @@ LEARNING_RATE = 0.0001  # How fast the model learns
 OUTPUT_DIR = "models"
 MODEL_NAME = f"fruit_ripeness_balanced_{datetime.now().strftime('%Y%m%d_%H%M%S')}.keras"
 
-print(f"📁 Training data: {TRAIN_DIR}")
-print(f"📁 Test data: {TEST_DIR}")
-print(f"🖼️  Image size: {IMG_SIZE}x{IMG_SIZE}")
-print(f"📦 Batch size: {BATCH_SIZE}")
-print(f"🔄 Max epochs: {EPOCHS}")
-print(f"📈 Learning rate: {LEARNING_RATE}")
-print(f"💾 Output: {OUTPUT_DIR}/{MODEL_NAME}")
+print(f"Training data: {TRAIN_DIR}")
+print(f"Test data: {TEST_DIR}")
+print(f"Image size: {IMG_SIZE}x{IMG_SIZE}")
+print(f"Batch size: {BATCH_SIZE}")
+print(f"Max epochs: {EPOCHS}")
+print(f"Learning rate: {LEARNING_RATE}")
+print(f"Output: {OUTPUT_DIR}/{MODEL_NAME}")
 print()
 
 # Check GPU
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
-    print(f"✅ GPU Available: {gpus[0].name}")
+    print(f"GPU Available: {gpus[0].name}")
     print(f"   Using GPU acceleration!")
 else:
-    print("⚠️  No GPU detected - using CPU (slower)")
+    print("No GPU detected - using CPU (slower)")
 print()
 
 # ============================================================================
 # PART 2: DATA LOADING & AUGMENTATION
 # ============================================================================
-print("📋 PART 2: Data Loading & Augmentation")
+print("PART 2: Data Loading & Augmentation")
 print("-" * 70)
 
 # Data augmentation for training (creates variations of images)
 # This helps the model learn better by seeing images from different angles
-print("🔧 Setting up data augmentation...")
+print("Setting up data augmentation...")
 print("   - Random rotation: ±20 degrees")
 print("   - Random shift: 20% horizontal/vertical")
 print("   - Random zoom: ±20%")
@@ -121,8 +122,8 @@ train_generator = train_datagen.flow_from_directory(
     shuffle=True
 )
 
-print(f"✅ Found {train_generator.samples} training images")
-print(f"✅ Found {len(train_generator.class_indices)} classes:")
+print(f"Found {train_generator.samples} training images")
+print(f"Found {len(train_generator.class_indices)} classes:")
 for class_name, class_idx in sorted(train_generator.class_indices.items(), key=lambda x: x[1]):
     count = np.sum(train_generator.classes == class_idx)
     pct = (count / train_generator.samples) * 100
@@ -138,7 +139,7 @@ test_generator = test_datagen.flow_from_directory(
     class_mode='categorical',
     shuffle=False
 )
-print(f"✅ Found {test_generator.samples} test images")
+print(f"Found {test_generator.samples} test images")
 print()
 
 num_classes = len(train_generator.class_indices)
@@ -146,9 +147,9 @@ num_classes = len(train_generator.class_indices)
 # ============================================================================
 # PART 3: CLASS WEIGHT CALCULATION (BALANCING)
 # ============================================================================
-print("📋 PART 3: Class Weight Calculation")
+print("PART 3: Class Weight Calculation")
 print("-" * 70)
-print("🔧 Calculating class weights to balance training...")
+print("Calculating class weights to balance training...")
 print()
 print("💡 What are class weights?")
 print("   Class weights tell the model to pay MORE attention to rare classes")
@@ -166,7 +167,7 @@ class_weights = compute_class_weight(
 # Map weights to actual class indices (not just 0, 1, 2...)
 class_weight_dict = {cls: weight for cls, weight in zip(unique_classes, class_weights)}
 
-print("📊 Calculated Class Weights:")
+print("Calculated Class Weights:")
 print("   (Higher weight = model pays more attention)")
 print()
 for class_name, class_idx in sorted(train_generator.class_indices.items(), key=lambda x: x[1]):
@@ -181,7 +182,7 @@ print()
 # ============================================================================
 # PART 4: MODEL ARCHITECTURE
 # ============================================================================
-print("📋 PART 4: Model Architecture")
+print("PART 4: Model Architecture")
 print("-" * 70)
 print("🏗️  Building MobileNetV2 model...")
 print()
@@ -197,7 +198,7 @@ base_model = MobileNetV2(
 # Freeze the base model (don't train it initially)
 base_model.trainable = False
 
-print("✅ Loaded MobileNetV2 base model")
+print("Loaded MobileNetV2 base model")
 print(f"   Parameters: {base_model.count_params():,}")
 print()
 
@@ -210,7 +211,7 @@ outputs = Dense(num_classes, activation='softmax')(x)  # Output layer
 
 model = Model(inputs=base_model.input, outputs=outputs)
 
-print("✅ Added custom classification layers")
+print("Added custom classification layers")
 print(f"   Total parameters: {model.count_params():,}")
 print()
 
@@ -221,13 +222,13 @@ model.compile(
     metrics=['accuracy']
 )
 
-print("✅ Model compiled and ready to train!")
+print("Model compiled and ready to train!")
 print()
 
 # ============================================================================
 # PART 5: TRAINING CALLBACKS
 # ============================================================================
-print("📋 PART 5: Training Callbacks (Automatic Helpers)")
+print("PART 5: Training Callbacks (Automatic Helpers)")
 print("-" * 70)
 
 # Create output directory
@@ -281,14 +282,14 @@ callbacks = [
     )
 ]
 
-print("✅ Callbacks configured:")
+print("Callbacks configured:")
 print("   - ModelCheckpoint: Saves best model automatically")
 print("   - EarlyStopping: Stops if no improvement (patience=10)")
 print("   - ReduceLROnPlateau: Reduces learning rate if stuck")
 print("   - CSVLogger: Saves training history")
 print("   - TensorBoard: Live training visualization")
 print()
-print(f"📊 TensorBoard Logs: {tensorboard_log_dir}")
+print(f"TensorBoard Logs: {tensorboard_log_dir}")
 print("   To view live training dashboard, run in another terminal:")
 print(f"   tensorboard --logdir={tensorboard_log_dir}")
 print()
@@ -296,7 +297,7 @@ print()
 # ============================================================================
 # PART 6: TRAINING PHASE 1 (Top Layers Only)
 # ============================================================================
-print("📋 PART 6: Training Phase 1 - Top Layers Only")
+print("PART 6: Training Phase 1 - Top Layers Only")
 print("-" * 70)
 print("🏃 Starting training (this will take a while)...")
 print()
@@ -316,14 +317,14 @@ history1 = model.fit(
 )
 
 print()
-print("✅ Phase 1 complete!")
+print("Phase 1 complete!")
 print(f"   Best accuracy: {max(history1.history['val_accuracy'])*100:.2f}%")
 print()
 
 # ============================================================================
 # PART 7: TRAINING PHASE 2 (Fine-tuning)
 # ============================================================================
-print("📋 PART 7: Training Phase 2 - Fine-Tuning")
+print("PART 7: Training Phase 2 - Fine-Tuning")
 print("-" * 70)
 print("🔓 Unfreezing base model for fine-tuning...")
 print()
@@ -342,7 +343,7 @@ model.compile(
     metrics=['accuracy']
 )
 
-print("✅ Model unfrozen and recompiled with lower learning rate")
+print("Model unfrozen and recompiled with lower learning rate")
 print()
 
 # Continue training
@@ -360,20 +361,20 @@ history2 = model.fit(
 )
 
 print()
-print("✅ Phase 2 complete!")
+print("Phase 2 complete!")
 print()
 
 # ============================================================================
 # PART 8: EVALUATION
 # ============================================================================
 print("=" * 70)
-print("📊 FINAL EVALUATION")
+print("FINAL EVALUATION")
 print("=" * 70)
 
 # Evaluate on test set
 test_loss, test_acc = model.evaluate(test_generator, verbose=0)
 
-print(f"\n🎯 Test Results:")
+print(f"\nTest Results:")
 print(f"   Accuracy: {test_acc*100:.2f}%")
 print(f"   Loss: {test_loss:.4f}")
 print()
@@ -382,20 +383,20 @@ print()
 old_accuracy = 21.87  # From your analysis
 improvement = test_acc * 100 - old_accuracy
 
-print(f"📈 Improvement:")
+print(f"Improvement:")
 print(f"   Old model: {old_accuracy:.2f}%")
 print(f"   New model: {test_acc*100:.2f}%")
 if improvement > 0:
     print(f"   🎉 Improvement: +{improvement:.2f}% !")
 else:
-    print(f"   ⚠️  Change: {improvement:.2f}%")
+    print(f"   Change: {improvement:.2f}%")
 print()
 
 # Save final model
 final_model_path = os.path.join(OUTPUT_DIR, "fruit_ripeness_final.keras")
 model.save(final_model_path)
 
-print(f"💾 Model saved:")
+print(f"Model saved:")
 print(f"   Best: {OUTPUT_DIR}/{MODEL_NAME}")
 print(f"   Final: {final_model_path}")
 print()
@@ -435,7 +436,7 @@ print("=" * 70)
 print()
 print("🎉 Your new balanced model is ready to use!")
 print()
-print("📝 Next steps:")
+print("Next steps:")
 print("   1. Test the new model with your Flask/Streamlit apps")
 print("   2. Update model path in src/model_loader.py")
 print("   3. Run predictions and compare with old model")
