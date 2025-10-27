@@ -1,0 +1,15 @@
+tensorflow[and-cuda]
+keras
+opencv-python
+matplotlib
+numpy
+pandas
+scikit-learn
+sqlalchemy
+jupyter
+seaborn
+flask==3.0.0
+flask-cors==4.0.0
+pillow
+streamlit
+tqdm

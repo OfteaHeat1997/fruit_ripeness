@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Database files (runtime data - don't commit)
+*.db
+predictions.db
+
+# Model files (too large - document download location instead)
+*.keras
+*.h5
+*.hdf5
+*.pb
+*.pth
+*.ckpt
+
+# Dataset (too large - document download location instead)
+data/fruit_ripeness_dataset/
+data/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+
+# Cache
+.cache/
+*.cache
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Analysis output images (optional - you might want to commit these)
+# Uncomment if you don't want to commit generated images
+# *.png
+# analysis_visualizations_*.png
+# training_data_imbalance.png
+# individual_predictions.png
+# entropy_analysis.png
+
+# Git helper scripts (don't commit)
+commit_step_by_step.sh
+push_to_github.sh
+GIT_COMMIT_GUIDE.md
+
+# Claude-specific files (don't commit)
+CLAUDE.md
