@@ -25,6 +25,7 @@ venv/
 env/
 ENV/
 .venv
+myenv/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -43,6 +44,7 @@ ENV/
 # Database files (runtime data - don't commit)
 *.db
 predictions.db
+predictions_export_*.csv
 
 # Model files (too large - document download location instead)
 *.keras
@@ -51,6 +53,7 @@ predictions.db
 *.pb
 *.pth
 *.ckpt
+models/
 
 # Dataset (too large - document download location instead)
 data/fruit_ripeness_dataset/
