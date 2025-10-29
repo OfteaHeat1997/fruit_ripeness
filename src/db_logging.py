@@ -1,3 +1,4 @@
+
 """
 Database Logging Module for Fruit Ripeness Predictions
 
